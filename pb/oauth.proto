@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package pb;
 
-option go_package = "seckill/pb;pb";
 
 service OAuthService{
     // token 校验
@@ -12,6 +11,7 @@ service OAuthService{
 message CheckTokenRequest {
     string token = 1;
 }
+
 
 message ClientDetails {
     string clientId = 1;

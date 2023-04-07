@@ -2,14 +2,12 @@ syntax = "proto3";
 
 package pb;
 
-option go_package = "seckill/pb;pb";
-
-service UserService {
-    rpc CheckUser(UserRequest) returns (UserResponse) {}
+service UserService{
+    rpc Check(UserRequest) returns (UserResponse){}
 }
 
 message UserRequest {
-    string userName = 1;
+    string username = 1;
     string password = 2;
 }
 
