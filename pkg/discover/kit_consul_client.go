@@ -94,6 +94,7 @@ func (consulClient *DiscoveryClientInstance) DeRegister(instanceId string, logge
 // 该方法会从 consul 中获取的服务实例列表缓存在 DiscoverClientInstance 的 instancesMap 表中并注册对该服务实例的监控
 // 之后再调用该方法时，则直接从本地缓存表获取
 // 当有新的服务实例上线或者旧的服务实例下线时，对服务实力状态监控就可以及时发现，并更新本地缓存的服务实例列表
+// 通过缓存服务实例信息，减少服务实例与 Consul 的 HTTP 交互次数
 func (consulClient *DiscoveryClientInstance) DiscoverServices(serviceName string, logger *log.Logger) []*common.ServiceInstance {
 
 	//  该服务已监控并缓存
