@@ -21,7 +21,7 @@ var SecLimitMgrVars = &SecLimitMgr{
 	IpLimitMap:   make(map[string]*Limit),
 }
 
-// 防作弊
+// AntiSpam 防作弊
 // 进行ID 和 IP 的黑名单校验
 // 针对ID 和 IP 进行流量限制，限制 秒级 和 分级 的访问频率
 func AntiSpam(req *model.SecRequest) (err error) {

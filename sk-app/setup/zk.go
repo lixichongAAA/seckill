@@ -12,7 +12,7 @@ import (
 
 // 初始化zookeeper
 func InitZk() {
-	var hosts = []string{"39.98.179.73:2181"} //ip : port
+	var hosts = []string{"127.0.0.1:2181"} //ip : port
 	//option := zk.WithEventCallback(waitSecProductEvent)
 	conn, _, err := zk.Connect(hosts, time.Second*5)
 	if err != nil {

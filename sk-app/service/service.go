@@ -141,6 +141,7 @@ func (s SkAppService) SecInfoList() ([]map[string]interface{}, int, error) {
 	return data, 0, nil
 }
 
+// SecInfoById 获取秒杀商品信息
 func SecInfoById(productId int) (map[string]interface{}, int, error) {
 	//对Map加锁处理
 	config.SkAppContext.RWSecProductLock.RLock()

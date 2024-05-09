@@ -65,8 +65,8 @@ func loadBlackList(conn *redis.Client) {
 		conf.SecKill.IPBlackMap[v] = true
 	}
 
-	//go syncIpBlackList(conn)
-	//go syncIdBlackList(conn)
+	go syncIpBlackList(conn)
+	go syncIdBlackList(conn)
 	return
 }
 

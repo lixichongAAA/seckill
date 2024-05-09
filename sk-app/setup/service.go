@@ -38,14 +38,14 @@ func InitServer(host string, servicePort string) {
 	//fieldKeys := []string{"method"}
 
 	// requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-	// 	Namespace: "aoho",
+	// 	Namespace: "lxc",
 	// 	Subsystem: "sk_app",
 	// 	Name:      "request_count",
 	// 	Help:      "Number of requests received.",
 	// }, fieldKeys)
 
 	// requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-	// 	Namespace: "aoho",
+	// 	Namespace: "lxc",
 	// 	Subsystem: "sk_app",
 	// 	Name:      "request_latency",
 	// 	Help:      "Total duration of requests in microseconds.",
@@ -58,7 +58,7 @@ func InitServer(host string, servicePort string) {
 	skAppService = service.SkAppService{}
 
 	// 增加log和限流的中间件，不同接口可以使用不同的限流 ratebucket ,达到更细粒度的控制
-	//skAppService = plugins.SkAppLoggingMiddleware(config.Logger)(skAppService)
+	//skAppService = plugins.SkAppLoggingMiddleware(localconfig.Logger)(skAppService)
 	//skAppService = plugins.SkAppMetrics(requestCount, requestLatency)(skAppService)
 
 	healthCheckEnd := endpoint.MakeHealthCheckEndpoint(skAppService)

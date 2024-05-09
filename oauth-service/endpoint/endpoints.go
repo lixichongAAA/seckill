@@ -39,6 +39,7 @@ func MakeClientAuthorizationMiddleware(logger log.Logger) endpoint.Middleware {
 }
 
 // 在进入到 Endpoint 之前统一验证 context 中的 OAuth2Details 是否存在
+// 如果不存在,说明请求没有经过认证,拒绝请求访问.
 func MakeOAuth2AuthorizationMiddleware(logger log.Logger) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 

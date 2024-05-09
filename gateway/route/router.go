@@ -118,6 +118,9 @@ func (router HystrixRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			router.logger.Log("service id", serviceInstance.Host, serviceInstance.Port)
 
 			//设置代理服务地址信息
+			//在这里，我们只是根据请求中的服务名直接转发：如果我们需要对外屏蔽服务名，这样的路由转发规则显然是不够的
+			//我们可以增加路由配置的多样性，可以抽出路由配置层，根据指定的规则进行路由转发
+			//如配置名称、头部的信息、请求的参数和请求的body等转发到指定的服务
 			req.URL.Scheme = "http"
 			req.URL.Host = fmt.Sprintf("%s:%d", serviceInstance.Host, serviceInstance.Port)
 			req.URL.Path = "/" + destPath
