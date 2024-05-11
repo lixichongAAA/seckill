@@ -1,4 +1,5 @@
 create database user;
+use user;
 
 drop table if exists `user`;
 CREATE TABLE `user`

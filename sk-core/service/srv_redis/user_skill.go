@@ -12,9 +12,9 @@ import (
 	"github.com/lixichongAAA/seckill/sk-core/service/srv_user"
 )
 
-// 作用: Read2HandleChan--->Handler--->Handle2WriteChan
+// HandleUser 作用: Read2HandleChan--->Handler--->Handle2WriteChan
 // 该函数会从 Read2HandleChan 中获取请求，然后调用 HandleSecKill 函数对用户的秒杀请求
-// 进行处理，将返回结果推入 Handle2WriteChan 中并等待结果写入Redis,并设置结果写入Redis
+// 进行处理，将返回结果推入 Handle2WriteChan 中并等待结果写入Redis，并设置结果写入Redis
 // 操作的超时时间和超时回调
 func HandleUser() {
 	log.Println("handle user running")
@@ -39,8 +39,8 @@ func HandleUser() {
 	return
 }
 
-// 作用: Handle
-// 该方法会限制用户对商品的购买次数，对商品的抢购频次进行限制，对商品的抢购概率进行限制,对
+// HandleSeckill 作用: Handle
+// 该方法会限制用户对商品的购买次数，对商品的抢购频次进行限制，对商品的抢购概率进行限制，对
 // 合法的请求给予生成抢购资格的 Token 令牌
 func HandleSeckill(req *config.SecRequest) (res *config.SecResult, err error) {
 	config.SecLayerCtx.RWSecProductLock.RLock()

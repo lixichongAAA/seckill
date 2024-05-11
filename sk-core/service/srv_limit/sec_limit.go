@@ -1,12 +1,13 @@
 package srv_limit
 
-// 每秒限制
+// SecLimit 每秒限制
+// 实现了 sk-app 的 TimeLimit interface
 type SecLimit struct {
 	count   int   // 次数
 	preTime int64 // 上一次记录时间
 }
 
-// 当前秒的访问次数
+// Count 当前秒的访问次数
 func (p *SecLimit) Count(nowTime int64) (curCount int) {
 	if p.preTime != nowTime {
 		p.count = 1

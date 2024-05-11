@@ -98,7 +98,7 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">114.67.98.210</stringProp>
+          <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
           <stringProp name="HTTPSampler.port">9031</stringProp>
           <stringProp name="HTTPSampler.path">/sec/test</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>

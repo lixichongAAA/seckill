@@ -84,6 +84,7 @@ var SecLayerCtx = &SecLayerContext{
 	HistoryMap:       make(map[int]*srv_user.UserBuyHistory, 1024),
 	ProductCountMgr:  srv_product.NewProductCountMgr(),
 }
+
 var CoreCtx = &SkAppCtx{}
 
 type SecResult struct {

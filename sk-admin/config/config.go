@@ -39,6 +39,7 @@ func init() {
 	}
 	zipkinUrl := "http://" + conf.TraceConfig.Host + ":" + conf.TraceConfig.Port + conf.TraceConfig.Url
 	Logger.Log("zipkin url", zipkinUrl)
+	initTracer(zipkinUrl)
 }
 
 func initDefault() {

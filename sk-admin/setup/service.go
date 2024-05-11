@@ -35,14 +35,14 @@ func InitServer(host string, servicePort string) {
 	fieldKeys := []string{"method"}
 
 	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-		Namespace: "aoho",
+		Namespace: "lxc",
 		Subsystem: "user_service",
 		Name:      "request_count",
 		Help:      "Number of requests received.",
 	}, fieldKeys)
 
 	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-		Namespace: "aoho",
+		Namespace: "lxc",
 		Subsystem: "user_service",
 		Name:      "request_latency",
 		Help:      "Total duration of requests in microseconds.",

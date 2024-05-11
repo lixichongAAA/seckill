@@ -14,7 +14,6 @@ type AuthPermitAll struct {
 	PermitAll []interface{}
 }
 
-// 正则表达式我也不太懂
 func Match(str string) bool {
 	if len(AuthPermitConfig.PermitAll) > 0 {
 		targetValue := AuthPermitConfig.PermitAll

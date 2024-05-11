@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-
 	//kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	kitzipkin "github.com/go-kit/kit/tracing/zipkin"
 	localconfig "github.com/lixichongAAA/seckill/pkg/config"
@@ -37,19 +36,19 @@ func InitServer(host string, servicePort string) {
 
 	//fieldKeys := []string{"method"}
 
-	// requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-	// 	Namespace: "lxc",
-	// 	Subsystem: "sk_app",
-	// 	Name:      "request_count",
-	// 	Help:      "Number of requests received.",
-	// }, fieldKeys)
+	//requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+	//	Namespace: "lxc",
+	//	Subsystem: "sk_app",
+	//	Name:      "request_count",
+	//	Help:      "Number of requests received.",
+	//}, fieldKeys)
 
-	// requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-	// 	Namespace: "lxc",
-	// 	Subsystem: "sk_app",
-	// 	Name:      "request_latency",
-	// 	Help:      "Total duration of requests in microseconds.",
-	// }, fieldKeys)
+	//requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+	//	Namespace: "lxc",
+	//	Subsystem: "sk_app",
+	//	Name:      "request_latency",
+	//	Help:      "Total duration of requests in microseconds.",
+	//}, fieldKeys)
 	ratebucket := rate.NewLimiter(rate.Every(time.Second*1), 5000)
 
 	var (
@@ -82,7 +81,7 @@ func InitServer(host string, servicePort string) {
 
 	SecKillEnd := endpoint.MakeSecKillEndpoint(skAppService)
 	SecKillEnd = plugins.NewTokenBucketLimitterWithBuildIn(secRatebucket)(SecKillEnd)
-	//SecKillEnd = kitzipkin.TraceEndpoint(localconfig.ZipkinTracer, "sec-kill")(SecKillEnd)
+	SecKillEnd = kitzipkin.TraceEndpoint(localconfig.ZipkinTracer, "sec-kill")(SecKillEnd)
 
 	testEnd := endpoint.MakeTestEndpoint(skAppService)
 	testEnd = kitzipkin.TraceEndpoint(localconfig.ZipkinTracer, "test")(testEnd)

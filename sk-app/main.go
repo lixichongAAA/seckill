@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/lixichongAAA/seckill/pkg/bootstrap"
+	conf "github.com/lixichongAAA/seckill/pkg/config"
+	"github.com/lixichongAAA/seckill/pkg/mysql"
 	"github.com/lixichongAAA/seckill/sk-app/setup"
 )
 
@@ -13,7 +15,7 @@ import (
 // 从 Zookeeper 中加载秒杀活动数据到内存中，监听Zookeeper中的数据变化,
 // 并实时更新数据到内存中.建立Redis连接，启动工作协程.
 func main() {
-	//mysql.InitMysql(conf.MysqlConf.Host, conf.MysqlConf.Port, conf.MysqlConf.User, conf.MysqlConf.Pwd, conf.MysqlConf.Db)
+	mysql.InitMysql(conf.MysqlConfig.Host, conf.MysqlConfig.Port, conf.MysqlConfig.User, conf.MysqlConfig.Pwd, conf.MysqlConfig.Db)
 	setup.InitZk()
 	setup.InitRedis()
 	setup.InitServer(bootstrap.HttpConfig.Host, bootstrap.HttpConfig.Port)

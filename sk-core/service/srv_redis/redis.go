@@ -10,7 +10,7 @@ import (
 	"github.com/lixichongAAA/seckill/sk-core/config"
 )
 
-// 流程如下
+// RunProcess 流程如下
 // SecReqChan------>Proxy2LayerQueueName------>Read2HandleChan---->
 //
 //	----------------->Handler(HandleSecKill)----------------------
@@ -35,7 +35,7 @@ func RunProcess() {
 	return
 }
 
-// 作用: Proxy2LayerQueueName--->Read2HandleChan
+// HandleReader 作用: Proxy2LayerQueueName--->Read2HandleChan
 // 将Redis的 Proxy2LayerQueueName 队列中的数据转换为业务层能处理的数据，并推入到
 // Read2HandleChan 中，同时进行超时判断，设置超时时间和超时回调，并等待处理器进行秒杀处理
 func HandleReader() {
@@ -79,8 +79,8 @@ func HandleReader() {
 	}
 }
 
-// 作用: Handle2WriteChan--->Layer2ProxyQueueName
-// 该方法将 HandleUser 写入 Handle2WriteChan 的处理数据读取出来,调用 sendtoRedis 发送到 Layer2ProxyQueueName
+// HandleWrite 作用: Handle2WriteChan--->Layer2ProxyQueueName
+// 该方法将 HandleUser 写入 Handle2WriteChan 的处理数据读取出来，调用 sendtoRedis 发送到 Layer2ProxyQueueName
 // 队列中，秒杀业务系统会从该队列拉取返回的秒杀结果
 func HandleWrite() {
 	log.Println("handle write running")

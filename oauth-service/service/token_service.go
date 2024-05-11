@@ -26,7 +26,7 @@ type TokenGranter interface {
 	Grant(ctx context.Context, grantType string, client *ClientDetails, reader *http.Request) (*OAuth2Token, error)
 }
 
-// 组合模式，不同授权类型使用不同的 TokenGranter 结构实现的结构体来生成访问令牌
+// ComposeTokenGranter 组合模式，不同授权类型使用不同的 TokenGranter 结构实现的结构体来生成访问令牌
 type ComposeTokenGranter struct {
 	TokenGrantDict map[string]TokenGranter
 }
@@ -37,10 +37,8 @@ func NewComposeTokenGranter(tokenGrantDict map[string]TokenGranter) TokenGranter
 	}
 }
 
-// ComposeTokenGranter 方法 Grant 主要根据 granType 从 map 中获取对应类型的 TokenGranter 接口实现结构体
+// Grant ComposeTokenGranter 方法 Grant 主要根据 granType 从 map 中获取对应类型的 TokenGranter 接口实现结构体
 // 然后使用其验证客户端和用户凭证，并生成访问令牌返回。
-// 比如在客户端使用密码类型请求访问令牌，那我们需要对客户端携带的用户名和密码进行校验，
-// 如 下面 UsernamePasswordTokenGranter 就是密码类型的 TokenGranter 接口实现结构体
 func (tokenGranter *ComposeTokenGranter) Grant(ctx context.Context, grantType string, client *ClientDetails, reader *http.Request) (*OAuth2Token, error) {
 	// 获取具体的授权 TokenGranter 生成访问令牌
 	dispatchGranter := tokenGranter.TokenGrantDict[grantType]
@@ -52,7 +50,7 @@ func (tokenGranter *ComposeTokenGranter) Grant(ctx context.Context, grantType st
 	return dispatchGranter.Grant(ctx, grantType, client, reader)
 }
 
-// 密码类型
+// UsernamePasswordTokenGranter 密码类型
 type UsernamePasswordTokenGranter struct {
 	supportGrantType   string
 	userDetailsService UserDetailsService
@@ -124,15 +122,15 @@ func (tokenGranter *RefreshTokenGranter) Grant(ctx context.Context, grantType st
 
 // 该接口用于生成和管理令牌，使用 TokenStore 保存令牌
 type TokenService interface {
-	// 根据访问令牌获取对应的用户信息和客户端信息
+	// GetOAuth2DetailsByAccessToken 根据访问令牌获取对应的用户信息和客户端信息
 	GetOAuth2DetailsByAccessToken(tokenValue string) (*OAuth2Details, error)
-	// 根据用户信息和客户端信息生成访问令牌
+	// CreateAccessToken 根据用户信息和客户端信息生成访问令牌
 	CreateAccessToken(oauth2Details *OAuth2Details) (*OAuth2Token, error)
-	// 根据刷新令牌获取访问令牌
+	// RefreshAccessToken 根据刷新令牌获取访问令牌
 	RefreshAccessToken(refreshTokenValue string) (*OAuth2Token, error)
-	// 根据用户信息和客户端信息获取已生成访问令牌
+	// GetAccessToken 根据用户信息和客户端信息获取已生成访问令牌
 	GetAccessToken(details *OAuth2Details) (*OAuth2Token, error)
-	// 根据访问令牌值获取访问令牌结构体
+	// ReadAccessToken 根据访问令牌值获取访问令牌结构体
 	ReadAccessToken(tokenValue string) (*OAuth2Token, error)
 }
 
@@ -148,8 +146,8 @@ func NewTokenService(tokenStore TokenStore, tokenEnhancer TokenEnhancer) TokenSe
 	}
 }
 
-// 生成访问令牌
-// 根据用户端信息和客户端信息从 ToeknStore 中获取已保存的访问令牌，若访问令牌存在且未失效
+// CreateAccessToken 生成访问令牌
+// 根据用户端信息和客户端信息从 TokenStore 中获取已保存的访问令牌，若访问令牌存在且未失效
 // 则直接返回访问令牌，若已失效，那么将根据用户信息和客户端信息生成一个新的访问令牌并返回
 func (tokenService *DefaultTokenService) CreateAccessToken(oauth2Details *OAuth2Details) (*OAuth2Token, error) {
 
@@ -223,7 +221,7 @@ func (tokenService *DefaultTokenService) createRefreshToken(oauth2Details *OAuth
 	return refreshToken, nil
 }
 
-// 刷新访问令牌
+// RefreshAccessToken 刷新访问令牌
 // 在在客户端持有的访问令牌失效时，客户端可以使用访问令牌中携带的刷新令牌重新生成新的有效的访问令牌
 func (tokenService *DefaultTokenService) RefreshAccessToken(refreshTokenValue string) (*OAuth2Token, error) {
 
@@ -269,7 +267,7 @@ func (tokenService *DefaultTokenService) ReadAccessToken(tokenValue string) (*OA
 // 生成的访问令牌是与请求的客户端和用户信息是相互绑定的，因此在验证访问令牌的有效性时，可以根据
 // 访问令牌逆向获取到客户端信息和用户信息，这样才能通过访问令牌确定当前操作用户和授权的客户端
 
-// 首先根据访问令牌值从 TokenStore 中获取到对应的访问令牌结构体,若访问令牌没有失效
+// GetOAuth2DetailsByAccessToken 首先根据访问令牌值从 TokenStore 中获取到对应的访问令牌结构体,若访问令牌没有失效
 // 再通过 TokenStore 获取生成访问令牌时绑定的用户信息和客户端信息
 // 若访问令牌失效，则直接返回已失效的错误
 func (tokenService *DefaultTokenService) GetOAuth2DetailsByAccessToken(tokenValue string) (*OAuth2Details, error) {
@@ -284,26 +282,25 @@ func (tokenService *DefaultTokenService) GetOAuth2DetailsByAccessToken(tokenValu
 	return nil, err
 }
 
-// 负责存储生成的令牌,并维护令牌、用户、客户端之间的绑定关系
+// TokenStore 负责存储生成的令牌,并维护令牌、用户、客户端之间的绑定关系
 type TokenStore interface {
-
-	// 存储访问令牌
+	// StoreAccessToken 存储访问令牌
 	StoreAccessToken(oauth2Token *OAuth2Token, oauth2Details *OAuth2Details)
-	// 根据令牌值获取访问令牌结构体
+	// ReadAccessToken 根据令牌值获取访问令牌结构体
 	ReadAccessToken(tokenValue string) (*OAuth2Token, error)
-	// 根据令牌值获取令牌对应的客户端和用户信息
+	// ReadOAuth2Details 根据令牌值获取令牌对应的客户端和用户信息
 	ReadOAuth2Details(tokenValue string) (*OAuth2Details, error)
-	// 根据客户端信息和用户信息获取访问令牌
+	// GetAccessToken 根据客户端信息和用户信息获取访问令牌
 	GetAccessToken(oauth2Details *OAuth2Details) (*OAuth2Token, error)
-	// 移除存储的访问令牌
+	// RemoveAccessToken 移除存储的访问令牌
 	RemoveAccessToken(tokenValue string)
-	// 存储刷新令牌
+	// StoreRefreshToken 存储刷新令牌
 	StoreRefreshToken(oauth2Token *OAuth2Token, oauth2Details *OAuth2Details)
-	// 移除存储的刷新令牌
+	// RemoveRefreshToken 移除存储的刷新令牌
 	RemoveRefreshToken(oauth2Token string)
-	// 根据令牌值获取刷新令牌
+	// ReadRefreshToken 根据令牌值获取刷新令牌
 	ReadRefreshToken(tokenValue string) (*OAuth2Token, error)
-	// 根据令牌值获取刷新令牌对应的客户端和用户信息
+	// ReadOAuth2DetailsForRefreshToken 根据令牌值获取刷新令牌对应的客户端和用户信息
 	ReadOAuth2DetailsForRefreshToken(tokenValue string) (*OAuth2Details, error)
 }
 
@@ -332,7 +329,7 @@ func (tokenStore *JwtTokenStore) ReadAccessToken(tokenValue string) (*OAuth2Toke
 
 }
 
-// 根据令牌值获取令牌对应的客户端和用户信息
+// ReadOAuth2Details 根据令牌值获取令牌对应的客户端和用户信息
 func (tokenStore *JwtTokenStore) ReadOAuth2Details(tokenValue string) (*OAuth2Details, error) {
 	_, oauth2Details, err := tokenStore.jwtTokenEnhancer.Extract(tokenValue)
 	return oauth2Details, err
@@ -372,9 +369,9 @@ func (tokenStore *JwtTokenStore) ReadOAuth2DetailsForRefreshToken(tokenValue str
 }
 
 type TokenEnhancer interface {
-	// 组装 Token 信息
+	// Enhance 组装 Token 信息
 	Enhance(oauth2Token *OAuth2Token, oauth2Details *OAuth2Details) (*OAuth2Token, error)
-	// 从 Token 中还原信息
+	// Extract 从 Token 中还原信息
 	Extract(tokenValue string) (*OAuth2Token, *OAuth2Details, error)
 }
 

@@ -58,7 +58,7 @@ func (p ActivityServiceImpl) GetActivityList() ([]gorose.Data, error) {
 	return activityList, nil
 }
 
-// 创建秒杀活动，将秒杀活动信息保存到Mysql数据中，并调用 SyncToZk 方法同步到 Zookeeper
+// CreateActivity 创建秒杀活动，将秒杀活动信息保存到Mysql数据中，并调用 SyncToZk 方法同步到 Zookeeper
 func (p ActivityServiceImpl) CreateActivity(activity *model.Activity) error {
 	log.Printf("CreateActivity")
 	//写入到数据库
