@@ -15,10 +15,10 @@
         <longProp name="ThreadGroup.start_time">1143889321000</longProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.num_threads">1000</stringProp>
+        <stringProp name="ThreadGroup.num_threads">2000</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <stringProp name="LoopController.loops">10</stringProp>
+          <stringProp name="LoopController.loops">20</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
         <longProp name="ThreadGroup.end_time">1143889321000</longProp>
